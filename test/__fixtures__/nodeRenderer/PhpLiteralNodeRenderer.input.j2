@@ -1,0 +1,11 @@
+<!-- default -->
+{{ 'hey' }}
+{{ 42 }}
+<!-- arrays -->
+{{ ['one'] }}
+<!-- conditions -->
+{% if model.copy or model.headline == '' %}{% endif %}
+<!-- parameters -->
+{% macro e_cta(type='primary') %}{% endmacro %}
+<!-- arguments -->
+{{ e_cta(type='primary') }}

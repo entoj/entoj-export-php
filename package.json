@@ -1,0 +1,36 @@
+{
+  "name": "entoj-export-php",
+  "version": "0.0.1",
+  "private": true,
+  "engines": {
+    "node": "6.x"
+  },
+  "main": "source/index.js",
+  "scripts": {
+    "coverage": "bash scripts/tests --coverage",
+    "coveralls": "bash scripts/coveralls",
+    "lint": "bash scripts/lint",
+    "test": "bash scripts/test"
+  },
+  "dependencies": {
+    "entoj-system": "^0.1.20",
+    "entoj-html": "^0.1.1",
+    "lodash.isplainobject": "^4.0.6"
+  },
+  "devDependencies": {
+    "chai": "*",
+    "chai-as-promised": "*",
+    "chai-string": "*",
+    "chai-subset": "*",
+    "chai-things": "*",
+    "coveralls": "*",
+    "git-changelog": "*",
+    "ink-docstrap": "*",
+    "istanbul": "*",
+    "jsdoc": "*",
+    "mocha": "*",
+    "sinon": "*",
+    "eslint": "*",
+    "entoj-test-fixture": "*"
+  }
+}

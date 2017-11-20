@@ -1,0 +1,9 @@
+<!-- variables -->
+{{ moduleClass }}
+{{ model.image.url.1x1 }}
+{{ model.images[0].url }}
+{{ loop.length }} {{ loop.index }} {{ loop.first }} {{ loop.last }}
+<!-- variables in conditions -->
+{% if model.copy or model.headline == '' %}{% endif %}
+<!-- variables in loops -->
+{% for item in model.items %} {{ loop.length }} {{ loop.index }} {{ loop.first }} {{ loop.last }}{% endfor %}
