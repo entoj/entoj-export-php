@@ -20,17 +20,17 @@ describe(PhpConfiguration.className, function()
     function prepareParameters(parameters)
     {
         const fixture = projectFixture.createStatic(true);
-        const fluidModuleConfiguration = new PhpModuleConfiguration(fixture.globalConfiguration);
+        const phpModuleConfiguration = new PhpModuleConfiguration(fixture.globalConfiguration);
         if (parameters && parameters.length)
         {
-            parameters.push(fluidModuleConfiguration);
+            parameters.push(phpModuleConfiguration);
             return parameters;
         }
         else
         {
-            return [undefined, undefined, {}, undefined, undefined, undefined, fixture.globalRepository, fixture.buildConfiguration, fluidModuleConfiguration];
+            return [undefined, undefined, {}, undefined, undefined, undefined, fixture.globalRepository, fixture.buildConfiguration, phpModuleConfiguration];
         }
     }
 
-    configurationSpec(PhpConfiguration, 'export/PhpConfiguration', prepareParameters, { identifier: 'fluid' });
+    configurationSpec(PhpConfiguration, 'export/PhpConfiguration', prepareParameters, { identifier: 'php' });
 });
