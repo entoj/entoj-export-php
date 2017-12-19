@@ -4,16 +4,28 @@
  * Requirements
  * @ignore
  */
-const BaseNode = require('../../node/BaseNode.js').BaseNode;
-const BaseNodeRenderer = require('../BaseNodeRenderer.js').BaseNodeRenderer;
+const NodeRenderer = require('entoj-system').export.renderer.NodeRenderer;
+const ErrorHandler = require('entoj-system').error.ErrorHandler;
+const TranslateFilter = require('entoj-system').nunjucks.filter.TranslateFilter;
+const VinylFile = require('vinyl');
 const co = require('co');
 
 
 /**
  *
  */
-class PhpTranslateFilterRenderer extends BaseNodeRenderer
+class PhpTranslateFilterRenderer extends NodeRenderer
 {
+    /**
+     * @inheritDoc
+     */
+    constructor()
+    {
+        super();
+        this.keys = {};
+    }
+
+
     /**
      * @inheritDoc
      */
@@ -24,83 +36,76 @@ class PhpTranslateFilterRenderer extends BaseNodeRenderer
 
 
     /**
-     * @return {Boolean}
+     * @inheritDoc
      */
-    isTranslateSet(node, configuration)
+    createAdditionalFiles(configuration, stage)
     {
-        if (!(node instanceof BaseNode))
+        const result = [];
+        if (stage == 'finalize')
         {
-            return false;
+            let contents = '';
+            contents+= '<?php\n';
+            for (const key in this.keys)
+            {
+                contents+= 'pll_register_string(\'' + this.keys[key] + '\', \'' + key + '\', \'theme\', true);\n';
+            }
+            contents+= ' ?>';
+            const file = new VinylFile(
+                {
+                    path: 'include/translations.php',
+                    contents: new Buffer(contents)
+                });
+            result.push(file);
         }
-        return node.is('SetNode') &&
-               node.value &&
-               node.value.is('ExpressionNode') &&
-               node.value.children.length === 1 &&
-               node.value.children[0].is('FilterNode') &&
-               node.value.children[0].name == 'translate';
+        return Promise.resolve(result);
     }
 
 
     /**
-     * @return {Promise<Boolean>}
-     */
-    isTranslateOutput(node, configuration)
-    {
-        if (!(node instanceof BaseNode))
-        {
-            return false;
-        }
-        return node.is('OutputNode') &&
-               node.children.length === 1 &&
-               node.children[0].is('FilterNode') &&
-               node.children[0].name == 'translate';
-    }
-
-
-    /**
-     * @return {Promise<Boolean>}
+     * @inheritDoc
      */
     willRender(node, configuration)
     {
-        return Promise.resolve(this.isTranslateSet(node, configuration) ||
-            this.isTranslateOutput(node, configuration));
+        return Promise.resolve(node && node.is('FilterNode') && node.name == 'translate');
     }
 
 
     /**
-     * @return {Promise<String>}
+     * @inheritDoc
      */
     render(node, configuration)
     {
+        if (!node ||
+            !configuration ||
+            configuration.internal.skipNodes === true)
+        {
+            return Promise.resolve('');
+        }
         const scope = this;
         const promise = co(function*()
         {
+            // Get key
+            const key = (yield configuration.renderer.renderNode(node.value, configuration)).replace(/'/g, '');
+
+            // Store translation string
+            scope.keys[key] = TranslateFilter.translate(key);
+
+            // Generate php
             let result = '';
-            let key = '';
-            const filter = (scope.isTranslateSet(node, configuration)) ? node.value.children[0] : node.children[0];
-            if (filter.configuration &&
-                filter.configuration.children &&
-                filter.configuration.children.length)
+            if (configuration.settings.mapping &&
+                configuration.settings.mapping.translate &&
+                configuration.settings.mapping.translate[key])
             {
-                key = yield scope.renderer.renderNode(filter.configuration.children[0].value, configuration);
+                result = configuration.settings.mapping.translate[key];
             }
             else
             {
-                key = yield scope.renderer.renderNode(filter.value, configuration);
+                result+= 'entoj_' +  node.name + '(';
+                result+= '\'' + key + '\'';
+                result+= ')';
             }
-            key = key.replace(/'/g, '');
-            result+= '<f:translate';
-            if (scope.isTranslateSet(node, configuration))
-            {
-                result+= ' name="';
-                result+= yield scope.renderer.renderNode(node.variable, configuration);
-                result+= '"';
-            }
-            result+= ' key="' + key + '"';
-            result+= ' />';
-
             return result;
-        });
+        }).catch(ErrorHandler.handler(this));
         return promise;
     }
 }

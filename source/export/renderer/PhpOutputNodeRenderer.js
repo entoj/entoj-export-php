@@ -37,13 +37,15 @@ class PhpOutputNodeRenderer extends NodeRenderer
      */
     render(node, configuration)
     {
-        if (!node)
+        if (!node || 
+            !configuration || 
+            configuration.internal.skipNodes === true)
         {
             return Promise.resolve('');
         }
         const promise = co(function*()
         {
-            let result = '<?php ';
+            let result = '<?php echo ';
             for (const child of node.children)
             {
                 result+= yield configuration.renderer.renderNode(child, configuration);

@@ -36,45 +36,18 @@ class PhpVariableNodeRenderer extends NodeRenderer
      */
     render(node, configuration)
     {
-        if (!node)
+        if (!node || 
+            !configuration || 
+            configuration.internal.skipNodes === true)
         {
             return Promise.resolve('');
         }
 
         let result = '';
-
-        // Open block?
-        let useBlock = false;
-
-        // When condition
-        if (node.isChildOf(['ConditionNode']))
-        {
-            useBlock = true;
-        }
-        // When expression with a string literal
-        if (node.isChildOf(['ExpressionNode']) &&
-            node.parent.find('LiteralNode', { valueType: 'string' }))
-        {
-            useBlock = true;
-        }
-        // When expression without an operand and not a parameter
-        if (node.isChildOf(['ExpressionNode']) &&
-            !node.parent.find('OperandNode') &&
-            !node.parent.isChildOf('ParameterNode'))
-        {
-            useBlock = true;
-        }
-
-        // Add block
-        if (useBlock)
-        {
-            //result+= '<?php echo ';
-        }
-
         // Loop variables
         if (node.isChildOf('ForNode') && node.fields[0] === 'loop' && node.fields.length === 2)
         {
-            result+= '$loop[';
+            result+= '@$loop[';
             if (node.fields[1] === 'first')
             {
                 result+= '\'isFirst\'';
@@ -103,7 +76,7 @@ class PhpVariableNodeRenderer extends NodeRenderer
                 {
                     if (isFirst)
                     {
-                        result+= '$' + field;                        
+                        result+= '@$' + field;                        
                     }
                     else
                     {
@@ -112,12 +85,6 @@ class PhpVariableNodeRenderer extends NodeRenderer
                 }
                 isFirst = false;
             }
-        }
-
-        // Close block?
-        if (useBlock)
-        {
-            //result+= ' ?>';
         }
 
         return Promise.resolve(result);

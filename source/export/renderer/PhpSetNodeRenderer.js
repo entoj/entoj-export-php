@@ -37,7 +37,9 @@ class PhpSetNodeRenderer extends NodeRenderer
      */
     render(node, configuration)
     {
-        if (!node)
+        if (!node || 
+            !configuration || 
+            configuration.internal.skipNodes === true)
         {
             return Promise.resolve('');
         }
@@ -47,7 +49,14 @@ class PhpSetNodeRenderer extends NodeRenderer
             result+= '<?php ';
             result+= yield configuration.renderer.renderNode(node.variable, configuration);
             result+= ' = ';
-            result+= yield configuration.renderer.renderNode(node.value, configuration);
+            if (node.value)
+            {
+                result+= yield configuration.renderer.renderNode(node.value, configuration);                
+            }
+            else
+            {
+                result+= 'null';
+            }
             result+= ' ?>';
             return result;
         });

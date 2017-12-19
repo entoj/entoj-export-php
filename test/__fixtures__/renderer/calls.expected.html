@@ -1,4 +1,4 @@
-<f:render partial="Templates/ContentElements/e-cta" arguments="{text: '{model.button}'}" />
-<f:render partial="Templates/ContentElements/m-teaser" arguments="{model: '{self}'}">children</f:render>
-<f:render partial="Templates/ContentElements/e-headline" arguments="{classes: '{moduleName}--check'}" />
-<f:render partial="Templates/ContentElements/e-headline" arguments="{level: '{level + 1}'}" />
+<?php entoj_render('base/elements/e-cta', array('text' => @$model['button'])) ?>
+<?php entoj_render_start('base/modules/m-teaser', array('model' => @$self)) ?>children<?php entoj_render_end() ?>
+<?php entoj_render('base/elements/e-headline', array('classes' => @$moduleName . '--check')) ?>
+<?php entoj_render('base/elements/e-headline', array('level' => @$level + 1)) ?>

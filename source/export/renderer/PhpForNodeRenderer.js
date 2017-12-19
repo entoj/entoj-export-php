@@ -39,7 +39,9 @@ class PhpForNodeRenderer extends NodeRenderer
      */
     render(node, configuration)
     {
-        if (!node)
+        if (!node || 
+            !configuration || 
+            configuration.internal.skipNodes === true)
         {
             return Promise.resolve('');
         }
@@ -48,8 +50,9 @@ class PhpForNodeRenderer extends NodeRenderer
             let result = '';
 
             // Create iteration
-            result+= '<?php $loop = array(\'length\' => count(), \'index\' => 0, \'isFirst\' => true, \'isLast\' => false); foreach(';
-            result+= yield configuration.renderer.renderNode(node.value, configuration);
+            const iterable = yield configuration.renderer.renderNode(node.value, configuration);
+            result+= '<?php $loop = array(\'length\' => count(' + iterable + '), \'index\' => 0, \'isFirst\' => true, \'isLast\' => false); foreach(';
+            result+= iterable;
             result+= ' as ';
             if (node.keyName)
             {

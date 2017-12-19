@@ -37,7 +37,9 @@ class PhpMacroNodeRenderer extends NodeRenderer
      */
     render(node, configuration)
     {
-        if (!node)
+        if (!node ||
+            !configuration ||
+            configuration.internal.skipNodes === true)
         {
             return Promise.resolve('');
         }
@@ -57,27 +59,25 @@ class PhpMacroNodeRenderer extends NodeRenderer
                 {
                     for (const parameter of config.macro.parameters)
                     {
-                        if (typeof parameter.defaultValue !== 'undefined' &&
-                            parameter.defaultValue !== '' &&
-                            parameter.defaultValue !== '\'\'' &&
-                            parameter.defaultValue !== false &&
-                            parameter.defaultValue !== 'false')
+                        let defaultValue = parameter.defaultValue;
+                        if (parameter.type[0] == 'Enumeration')
                         {
-                            let defaultValue = parameter.defaultValue;
-                            if (parameter.type[0] == 'Enumeration')
-                            {
-                                defaultValue = '\'' + trimQuotes(defaultValue) + '\'';
-                            }
-                            result+= '$' + parameter.name + ' = $' + parameter.name + ' || ' + defaultValue + '; ';
+                            defaultValue = '\'' + trimQuotes(defaultValue) + '\'';
                         }
+                        if (typeof parameter.defaultValue == 'undefined')
+                        {
+                            defaultValue = 'null';
+                        }
+                        result+= 'if (!isset($' + parameter.name + ')) { $' + parameter.name + ' = ' + defaultValue + '; } ';
                     }
                 }
             }
-            result+= ' ?>';            
+            result+= ' ?>';
             result+= '<!-- macro ' + node.name + ' body -->';
 
-            // Children            
+            // Children
             result+= yield configuration.renderer.renderList(node.children, configuration);
+            result+= '<!-- macro ' + node.name + ' end -->';
 
             return result;
         });

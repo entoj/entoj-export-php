@@ -39,7 +39,9 @@ class PhpIfNodeRenderer extends NodeRenderer
      */
     render(node, configuration)
     {
-        if (!node)
+        if (!node ||
+            !configuration ||
+            configuration.internal.skipNodes === true)
         {
             return Promise.resolve('');
         }
@@ -61,7 +63,7 @@ class PhpIfNodeRenderer extends NodeRenderer
                 result+= ')';
             }
             // If ...
-            else if (!node.elseChildren.length)
+            else if (!node.elseChildren.length && !node.elseIfChildren.length)
             {
                 result+= '<?php if (';
                 result+= yield configuration.renderer.renderNode(node.condition, configuration);
@@ -69,15 +71,28 @@ class PhpIfNodeRenderer extends NodeRenderer
                 result+= yield configuration.renderer.renderList(node.children, configuration);
                 result+= '<?php } ?>';
             }
-            // If ... else ...
+            // If ... elseif... else ...
             else
             {
                 result+= '<?php if (';
                 result+= yield configuration.renderer.renderNode(node.condition, configuration);
                 result+= ') { ?>';
                 result+= yield configuration.renderer.renderList(node.children, configuration);
-                result+= '<?php } else { ?>';
-                result+= yield configuration.renderer.renderList(node.elseChildren, configuration);
+                if (node.elseIfChildren.length)
+                {
+                    for (const elseIfNode of node.elseIfChildren)
+                    {
+                        result+= '<?php } elseif (';
+                        result+= yield configuration.renderer.renderNode(elseIfNode.condition, configuration);
+                        result+= ') { ?>';
+                        result+= yield configuration.renderer.renderList(elseIfNode.children, configuration);
+                    }
+                }
+                if (node.elseChildren.length)
+                {
+                    result+= '<?php } else { ?>';
+                    result+= yield configuration.renderer.renderList(node.elseChildren, configuration);
+                }
                 result+= '<?php } ?>';
             }
             return result;

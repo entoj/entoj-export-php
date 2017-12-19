@@ -25,6 +25,7 @@ class PhpConfiguration extends Configuration
         // Assign options
         this._phpConfiguration = phpConfiguration;
         this._identifier = 'php';
+        this._internal = {};
     }
 
 
@@ -47,6 +48,15 @@ class PhpConfiguration extends Configuration
 
 
     /**
+     * @type {Object}
+     */
+    get internal()
+    {
+        return this._internal;
+    }
+
+
+    /**
      * @inheritDocs
      */
     refineConfiguration(configuration)
@@ -57,17 +67,24 @@ class PhpConfiguration extends Configuration
             configuration.filename = this.settings.filename;
             if (!configuration.filename)
             {
-                configuration.filename = configuration.entity.pathString.substr(1);
+                configuration.filename = configuration.entity.id.site.name.urlify();
+                configuration.filename+= '/' + configuration.entity.id.category.pluralName.urlify();
+                configuration.filename+= '/' + configuration.macro.name.urlify().replace(/_/g, '-');
             }
         }
         else
         {
             configuration.filename = this.settings.filename;
-            if (!configuration.filename)            
+            if (!configuration.filename)
             {
                 configuration.filename = configuration.entity.pathString.substr(1);
             }
         }
+        if (!configuration.filename.endsWith('.php'))
+        {
+            configuration.filename+= '.php';
+        }
+        configuration.include = configuration.filename.substr(0, configuration.filename.length - 4);
         return Promise.resolve(configuration);
     }
 }

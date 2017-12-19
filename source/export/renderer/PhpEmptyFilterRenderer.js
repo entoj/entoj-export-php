@@ -41,7 +41,9 @@ class PhpEmptyFilterRenderer extends NodeListRenderer
      */
     render(node, configuration)
     {
-        if (!node || !configuration)
+        if (!node || 
+            !configuration || 
+            configuration.internal.skipNodes === true)
         {
             return Promise.resolve('');
         }

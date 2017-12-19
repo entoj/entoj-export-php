@@ -1,4 +1,4 @@
-<?php entoj_foo($model['text']) ?>
-<?php entoj_foo($model['text'], '#Lipsum', '#Lorem') ?>
-<?php entoj_bar(entoj_foo($model['text'], $x), 'y') ?>
-<?php entoj_foo(array(0 => 'one', 1 => $two)) ?>
+<?php echo entoj_foo(@$model['text']) ?>
+<?php echo entoj_foo(@$model['text'], '#Lipsum', '#Lorem') ?>
+<?php echo entoj_bar(entoj_foo(@$model['text'], @$x), 'y') ?>
+<?php echo entoj_foo(array(0 => 'one', 1 => @$two)) ?>

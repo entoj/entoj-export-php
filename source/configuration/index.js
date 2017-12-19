@@ -3,5 +3,5 @@
  */
 module.exports =
 {
-    FluidModuleConfiguration: require('./FluidModuleConfiguration.js').FluidModuleConfiguration
+    PhpModuleConfiguration: require('./PhpModuleConfiguration.js').PhpModuleConfiguration
 };

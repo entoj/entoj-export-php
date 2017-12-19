@@ -39,6 +39,12 @@ class PhpSetNodeTenaryRenderer extends NodeRenderer
      */
     render(node, configuration)
     {
+        if (!node || 
+            !configuration || 
+            configuration.internal.skipNodes === true)
+        {
+            return Promise.resolve('');
+        }        
         const promise = co(function*()
         {
             const ifNode = node.value.find('IfNode');

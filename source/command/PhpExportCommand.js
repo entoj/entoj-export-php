@@ -52,7 +52,7 @@ class PhpExportCommand extends ExportCommand
     /**
      * @inheritDocs
      */
-    addTasks(task, mapping)
+    __addTasks(task, mapping)
     {
         if (!task)
         {

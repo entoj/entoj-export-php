@@ -36,14 +36,20 @@ class PhpLiteralNodeRenderer extends NodeRenderer
      */
     render(node, configuration)
     {
-        if (!node)
+        if (!node ||
+            !configuration ||
+            configuration.internal.skipNodes === true)
         {
             return Promise.resolve('');
         }
         let result = '';
-        if (node.valueType == 'string')
+        if (node.valueType === 'string')
         {
             result+= '\'' + node.value.replace(/\"/g, '\\"') + '\'';
+        }
+        else if (node.valueType === 'undefined')
+        {
+            result+= 'null';
         }
         else
         {

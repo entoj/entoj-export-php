@@ -40,7 +40,9 @@ class PhpCallNodeRenderer extends NodeRenderer
      */
     render(node, configuration)
     {
-        if (!node || !configuration)
+        if (!node ||
+            !configuration ||
+            configuration.internal.skipNodes === true)
         {
             return Promise.resolve('');
         }
@@ -57,7 +59,7 @@ class PhpCallNodeRenderer extends NodeRenderer
             {
                 result+= '_start';
             }
-            result+= '(\'' + config.filename + '\'';
+            result+= '(\'' + config.include + '\'';
             if (node.arguments)
             {
                 result+= ', array(';

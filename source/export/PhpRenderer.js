@@ -2,7 +2,7 @@
 
 // Requirements
 const Renderer = require('entoj-system').export.Renderer;
-const renderers = require('./renderer/index.js');
+const co = require('co');
 
 
 /**
@@ -12,28 +12,43 @@ const renderers = require('./renderer/index.js');
 class PhpRenderer extends Renderer
 {
     /**
-     * @ignore
-     */
-    constructor(nodeRenderers, options)
-    {
-        let instances = nodeRenderers;
-        if (!instances || !instances.length)
-        {
-            instances = Object.keys(renderers).map(function(name)
-            {
-                return new renderers[name]();
-            });
-        }
-        super(instances, options);
-    }
-
-    /**
      * @inheritDocs
      */
     static get className()
     {
         return 'export/PhpRenderer';
     }
+
+
+    /**
+     * @inheritDocs
+     */
+    static get injections()
+    {
+        return { 'parameters': ['export/PhpRenderer.nodeRenderers', 'export/PhpRenderer.options'] };
+    }
+
+
+    /**
+     * @inheritDocs
+     */
+    __render(node, configuration)
+    {
+        if (!node)
+        {
+            return Promise.resolve('');
+        }
+        const scope = this;
+        const promise = co(function*()
+        {
+            let source = '';
+            source+= yield scope.renderPreface(configuration);
+            source+= yield scope.renderNode(node, configuration);
+            source+= yield scope.renderPostface(configuration);
+            return source;
+        }); 
+        return promise;
+    }    
 }
 
 

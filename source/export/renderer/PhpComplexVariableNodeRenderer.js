@@ -5,6 +5,8 @@
  * @ignore
  */
 const NodeRenderer = require('entoj-system').export.renderer.NodeRenderer;
+const Node = require('entoj-system').export.ast.Node;
+const waitForPromise = require('entoj-system').utils.synchronize.waitForPromise;
 const isPlainObject = require('lodash.isplainobject');
 
 
@@ -39,7 +41,9 @@ class PhpComplexVariableNodeRenderer extends NodeRenderer
      */
     render(node, configuration)
     {
-        if (!node)
+        if (!node ||
+            !configuration ||
+            configuration.internal.skipNodes === true)
         {
             return Promise.resolve('');
         }
@@ -72,7 +76,7 @@ class PhpComplexVariableNodeRenderer extends NodeRenderer
                         result+= ', ';
                     }
                 }
-                result+= ')';       
+                result+= ')';
             }
             // Array
             else if (Array.isArray(data))
@@ -86,7 +90,7 @@ class PhpComplexVariableNodeRenderer extends NodeRenderer
                         result+= ', ';
                     }
                 }
-                result+= ')';                
+                result+= ')';
             }
             // Simple
             else
@@ -94,6 +98,10 @@ class PhpComplexVariableNodeRenderer extends NodeRenderer
                 if (typeof data === 'string')
                 {
                     result+= '\'' + data + '\'';
+                }
+                else if (data instanceof Node)
+                {
+                    result+= waitForPromise(configuration.renderer.renderNode(data, configuration));
                 }
                 else
                 {
