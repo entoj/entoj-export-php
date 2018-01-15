@@ -6,7 +6,8 @@
  */
 const NodeRenderer = require('entoj-system').export.renderer.NodeRenderer;
 const ErrorHandler = require('entoj-system').error.ErrorHandler;
-const TranslateFilter = require('entoj-system').nunjucks.filter.TranslateFilter;
+const TranslationsRepository = require('entoj-system').model.translation.TranslationsRepository;
+const waitForPromise = require('entoj-system').utils.synchronize.waitForPromise;
 const VinylFile = require('vinyl');
 const co = require('co');
 
@@ -19,10 +20,21 @@ class PhpTranslateFilterRenderer extends NodeRenderer
     /**
      * @inheritDoc
      */
-    constructor()
+    constructor(translationsRepository)
     {
         super();
+
+        this._translationsRepository = translationsRepository;
         this.keys = {};
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    static get injections()
+    {
+        return { 'parameters': [TranslationsRepository] };
     }
 
 
@@ -32,6 +44,15 @@ class PhpTranslateFilterRenderer extends NodeRenderer
     static get className()
     {
         return 'transformer.noderenderer.fluid/TranslateFilterRenderer';
+    }
+
+
+    /**
+     * @type {TranslationsRepository}
+     */
+    get translationsRepository()
+    {
+        return this._translationsRepository;
     }
 
 
@@ -88,15 +109,18 @@ class PhpTranslateFilterRenderer extends NodeRenderer
             const key = (yield configuration.renderer.renderNode(node.value, configuration)).replace(/'/g, '');
 
             // Store translation string
-            scope.keys[key] = TranslateFilter.translate(key);
+            const translation = yield scope.translationsRepository.findBy({ name: key });
+            scope.keys[key] = translation
+                ? translation.value
+                : key;
 
             // Generate php
             let result = '';
-            if (configuration.settings.mapping &&
-                configuration.settings.mapping.translate &&
-                configuration.settings.mapping.translate[key])
+            if (configuration.settings &&
+                configuration.settings.translate &&
+                configuration.settings.translate[key])
             {
-                result = configuration.settings.mapping.translate[key];
+                result = configuration.settings.translate[key];
             }
             else
             {
