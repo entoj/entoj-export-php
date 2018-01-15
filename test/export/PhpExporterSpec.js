@@ -5,6 +5,8 @@
  */
 const PhpExporter = require(PHP_SOURCE + '/export/PhpExporter.js').PhpExporter;
 const PhpModuleConfiguration = require(PHP_SOURCE + '/configuration/PhpModuleConfiguration.js').PhpModuleConfiguration;
+const PhpRenderer = require(PHP_SOURCE + '/export/PhpRenderer.js').PhpRenderer;
+const PhpTransformer = require(PHP_SOURCE + '/export/PhpTransformer.js').PhpTransformer;
 const exporterSpec = require('entoj-system/test').export.ExporterShared;
 const projectFixture = require('entoj-system/test').fixture.project;
 
@@ -19,16 +21,18 @@ describe(PhpExporter.className, function()
      */
     function prepareParameters(parameters)
     {
-        const fixture = projectFixture.createStatic(true);
-        const fluidModuleConfiguration = new PhpModuleConfiguration(fixture.globalConfiguration);
+        const fixture = projectFixture.createDynamic();
+        const moduleConfiguration = fixture.context.di.create(PhpModuleConfiguration);
+        const phpRenderer = fixture.context.di.create(PhpRenderer);
+        const phpTransformer = fixture.context.di.create(PhpTransformer);        
         if (parameters && parameters.length)
         {
-            parameters.push(fluidModuleConfiguration);
+            parameters.push(moduleConfiguration, phpRenderer, phpTransformer);
             return parameters;
         }
         else
         {
-            return [fixture.globalRepository, fixture.buildConfiguration, fluidModuleConfiguration];
+            return [fixture.globalRepository, fixture.buildConfiguration, moduleConfiguration, phpRenderer, phpTransformer];
         }
     }
 

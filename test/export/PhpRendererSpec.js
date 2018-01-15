@@ -31,15 +31,15 @@ describe(PhpRenderer.className, function()
         'should render loops': 'loops',
         'should render filter': 'filter',
         'should render assignments': 'assignments',
-        'should render calls': 'calls'
-        //'should render special constructs': 'specials'
+        'should render calls': 'calls',
+        'should render special constructs': 'specials'
     };
     const options =
     {
         configurationCreator: function(entity, macro, settings, parser, renderer, transformer, globalRepository, buildConfiguration)
         {
-            const jspModuleConfiguration = new PhpModuleConfiguration(global.fixtures.globalConfiguration, global.fixtures.buildConfiguration);
-            return new PhpConfiguration(entity, macro, settings, parser, renderer, transformer, globalRepository, buildConfiguration, jspModuleConfiguration);
+            const moduleConfiguration = new PhpModuleConfiguration(global.fixtures.globalConfiguration, global.fixtures.buildConfiguration);
+            return new PhpConfiguration(entity, macro, settings, parser, renderer, transformer, globalRepository, buildConfiguration, moduleConfiguration);
         },
         fixtureInputPath: PHP_FIXTURES + '/renderer',
         fixtureExpectedPath: PHP_FIXTURES + '/renderer',
