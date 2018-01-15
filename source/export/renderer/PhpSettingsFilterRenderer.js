@@ -47,11 +47,11 @@ class PhpSettingsFilterRenderer extends NodeRenderer
         {
             const key = (yield configuration.renderer.renderNode(node.value, configuration)).replace(/'/g, '');
             let result = '';
-            if (configuration.settings.mapping &&
-                configuration.settings.mapping.settings &&
-                configuration.settings.mapping.settings[key])
+            if (configuration.settings &&
+                configuration.settings.settings &&
+                configuration.settings.settings[key])
             {
-                result = configuration.settings.mapping.settings[key];
+                result = configuration.settings.settings[key];
             }
             else
             {
