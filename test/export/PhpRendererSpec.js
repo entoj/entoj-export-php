@@ -31,8 +31,7 @@ describe(PhpRenderer.className, function()
         'should render loops': 'loops',
         'should render filter': 'filter',
         'should render assignments': 'assignments',
-        'should render calls': 'calls',
-        'should render special constructs': 'specials'
+        'should render calls': 'calls'
     };
     const options =
     {

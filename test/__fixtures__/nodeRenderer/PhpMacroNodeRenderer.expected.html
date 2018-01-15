@@ -1,2 +1,2 @@
-<!-- macro m_teaser default values --><?php extract(entoj_pop_arguments()); $type = $type || 'content';  ?><!-- macro m_teaser body -->
-<!-- macro e_headline default values --><?php extract(entoj_pop_arguments()); $level = $level || 1; $skin = $skin || 'light';  ?><!-- macro e_headline body -->
+<!-- macro m_teaser default values --><?php extract(entoj_pop_arguments()); if (!isset($type)) { $type = 'content'; } if (!isset($classes)) { $classes = ''; } if (!isset($model)) { $model = false; }  ?><!-- macro m_teaser body --><!-- macro m_teaser end -->
+<!-- macro e_headline default values --><?php extract(entoj_pop_arguments()); if (!isset($text)) { $text = ''; } if (!isset($level)) { $level = 1; } if (!isset($skin)) { $skin = 'light'; } if (!isset($classes)) { $classes = ''; }  ?><!-- macro e_headline body --><!-- macro e_headline end -->
