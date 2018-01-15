@@ -10,14 +10,6 @@ const Transformer = require('entoj-system').export.Transformer;
 class PhpTransformer extends Transformer
 {
     /**
-     * @param {Array} nodeTransformers
-     */
-    constructor(nodeTransformers)
-    {
-        super(nodeTransformers);
-    }
-
-    /**
      * @inheritDocs
      */
     static get className()
