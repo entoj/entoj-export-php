@@ -45,7 +45,7 @@ class PhpLiteralNodeRenderer extends NodeRenderer
         let result = '';
         if (node.valueType === 'string')
         {
-            result+= '\'' + node.value.replace(/\"/g, '\\"') + '\'';
+            result+= '\'' + node.value.replace(/"/g, '\\"') + '\'';
         }
         else if (node.valueType === 'undefined')
         {

@@ -5,7 +5,6 @@
  * @ignore
  */
 const NodeListRenderer = require('entoj-system').export.renderer.NodeListRenderer;
-const co = require('co');
 
 
 /**

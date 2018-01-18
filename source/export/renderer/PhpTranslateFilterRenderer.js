@@ -7,7 +7,6 @@
 const NodeRenderer = require('entoj-system').export.renderer.NodeRenderer;
 const ErrorHandler = require('entoj-system').error.ErrorHandler;
 const TranslationsRepository = require('entoj-system').model.translation.TranslationsRepository;
-const waitForPromise = require('entoj-system').utils.synchronize.waitForPromise;
 const VinylFile = require('vinyl');
 const co = require('co');
 

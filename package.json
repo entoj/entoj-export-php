@@ -1,9 +1,9 @@
 {
   "name": "entoj-export-php",
-  "version": "0.0.1",
-  "private": true,
+  "version": "0.0.0",
+  "private": false,
   "engines": {
-    "node": "6.x"
+    "node": ">=6.x"
   },
   "main": "source/index.js",
   "scripts": {

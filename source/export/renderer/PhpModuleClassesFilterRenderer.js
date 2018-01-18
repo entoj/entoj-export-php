@@ -4,8 +4,6 @@
 const NodeListRenderer = require('entoj-system').export.renderer.NodeListRenderer;
 const ErrorHandler = require('entoj-system').error.ErrorHandler;
 const co = require('co');
-const VinylFile = require('vinyl');
-
 
 
 /**
@@ -38,8 +36,8 @@ class PhpModuleClassesFilterRenderer extends NodeListRenderer
      */
     render(node, configuration)
     {
-        if (!node || 
-            !configuration || 
+        if (!node ||
+            !configuration ||
             configuration.internal.skipNodes === true)
         {
             return Promise.resolve('');
