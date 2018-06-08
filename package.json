@@ -13,9 +13,11 @@
     "test": "bash scripts/test"
   },
   "dependencies": {
-    "entoj-system": "^0.2.9",
-    "entoj-html": "^0.2.1",
-    "lodash.isplainobject": "^4.0.6"
+    "co": "^4.6.0",
+    "entoj-html": "^0.4.1",
+    "entoj-system": "^0.3.12",
+    "lodash.isplainobject": "^4.0.6",
+    "vinyl": "^2.1.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",

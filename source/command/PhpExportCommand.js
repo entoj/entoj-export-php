@@ -47,19 +47,6 @@ class PhpExportCommand extends ExportCommand
     {
         return 'command/PhpExportCommand';
     }
-
-
-    /**
-     * @inheritDocs
-     */
-    __addTasks(task, mapping)
-    {
-        if (!task)
-        {
-            return Promise.resolve();
-        }
-        return Promise.resolve(task.pipe(this.context.di.create(BeautifyHtmlTask, mapping)));
-    }
 }
 
 

@@ -15,15 +15,15 @@ class PhpConfiguration extends Configuration
     /**
      * @ignore
      */
-    constructor(entity, macro, settings, parser, renderer, transformer, globalRepository, buildConfiguration, phpConfiguration)
+    constructor(entity, macro, settings, parser, renderer, transformer, globalRepository, buildConfiguration, moduleConfiguration)
     {
         super(entity, macro, settings, parser, renderer, transformer, globalRepository, buildConfiguration);
 
         // Check params
-        assertParameter(this, 'phpConfiguration', phpConfiguration, true, PhpModuleConfiguration);
+        assertParameter(this, 'moduleConfiguration', moduleConfiguration, true, PhpModuleConfiguration);
 
         // Assign options
-        this._phpConfiguration = phpConfiguration;
+        this._moduleConfiguration = moduleConfiguration;
         this._identifier = 'php';
         this._internal = {};
     }
@@ -41,9 +41,9 @@ class PhpConfiguration extends Configuration
     /**
      * @type {configuration.PhpConfiguration}
      */
-    get phpConfiguration()
+    get moduleConfiguration()
     {
-        return this._phpConfiguration;
+        return this._moduleConfiguration;
     }
 
 
@@ -61,7 +61,7 @@ class PhpConfiguration extends Configuration
      */
     refineConfiguration(configuration)
     {
-        configuration.php = this.phpConfiguration;
+        configuration.php = this.moduleConfiguration;
         if (configuration.macro)
         {
             configuration.filename = this.settings.filename;

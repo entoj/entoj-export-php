@@ -27,28 +27,6 @@ class PhpRenderer extends Renderer
     {
         return { 'parameters': ['export/PhpRenderer.nodeRenderers', 'export/PhpRenderer.options'] };
     }
-
-
-    /**
-     * @inheritDocs
-     */
-    __render(node, configuration)
-    {
-        if (!node)
-        {
-            return Promise.resolve('');
-        }
-        const scope = this;
-        const promise = co(function*()
-        {
-            let source = '';
-            source+= yield scope.renderPreface(configuration);
-            source+= yield scope.renderNode(node, configuration);
-            source+= yield scope.renderPostface(configuration);
-            return source;
-        }); 
-        return promise;
-    }    
 }
 
 

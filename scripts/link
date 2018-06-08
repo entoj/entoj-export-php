@@ -6,7 +6,7 @@ set -e
 
 # Prepare
 SELF=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-PACKAGES=( "entoj-system" "entoj-html" )
+PACKAGES=( "entoj-system" "entoj-html" "entoj-test-fixture" )
 
 # Doit
 for i in "${PACKAGES[@]}"

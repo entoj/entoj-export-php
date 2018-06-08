@@ -24,7 +24,7 @@ class PhpTranslateFilterRenderer extends NodeRenderer
         super();
 
         this._translationsRepository = translationsRepository;
-        this.keys = {};
+        this.translations = {};
     }
 
 
@@ -65,9 +65,9 @@ class PhpTranslateFilterRenderer extends NodeRenderer
         {
             let contents = '';
             contents+= '<?php\n';
-            for (const key in this.keys)
+            for (const key in this.translations)
             {
-                contents+= 'pll_register_string(\'' + this.keys[key] + '\', \'' + key + '\', \'theme\', true);\n';
+                contents+= 'pll_register_string(\'' + this.translations[key] + '\', \'' + key + '\', \'theme\', true);\n';
             }
             contents+= ' ?>';
             const file = new VinylFile(
@@ -109,7 +109,7 @@ class PhpTranslateFilterRenderer extends NodeRenderer
 
             // Store translation string
             const translation = yield scope.translationsRepository.findBy({ name: key });
-            scope.keys[key] = translation
+            scope.translations[key] = translation
                 ? translation.value
                 : key;
 
